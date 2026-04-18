@@ -24,9 +24,7 @@
       --border: rgba(148, 163, 184, 0.08);
       --radius: 16px;
     }
-
     * { margin: 0; padding: 0; box-sizing: border-box; }
-
     body {
       font-family: 'Noto Sans KR', sans-serif;
       background: var(--bg-primary);
@@ -34,7 +32,6 @@
       min-height: 100vh;
       overflow-x: hidden;
     }
-
     /* === BACKGROUND ATMOSPHERE === */
     body::before {
       content: '';
@@ -54,7 +51,6 @@
       pointer-events: none;
       z-index: 0;
     }
-
     .container {
       max-width: 1100px;
       margin: 0 auto;
@@ -63,12 +59,198 @@
       z-index: 1;
     }
 
+    /* ========================================= */
+    /* ============ PASSWORD LOCK ============== */
+    /* ========================================= */
+    .lock-screen {
+      position: fixed;
+      inset: 0;
+      background: var(--bg-primary);
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      overflow: hidden;
+    }
+
+    .lock-screen.hidden {
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.5s ease;
+    }
+
+    /* Ambient glows matching the site background */
+    .lock-screen::before {
+      content: '';
+      position: absolute;
+      top: -30%; left: -15%;
+      width: 70vw; height: 70vw;
+      background: radial-gradient(circle, rgba(45, 212, 191, 0.06) 0%, transparent 60%);
+      pointer-events: none;
+    }
+    .lock-screen::after {
+      content: '';
+      position: absolute;
+      bottom: -25%; right: -10%;
+      width: 55vw; height: 55vw;
+      background: radial-gradient(circle, rgba(56, 189, 248, 0.05) 0%, transparent 60%);
+      pointer-events: none;
+    }
+
+    .lock-card {
+      position: relative;
+      z-index: 2;
+      width: 100%;
+      max-width: 420px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 44px 36px;
+      text-align: center;
+      box-shadow: 0 30px 80px rgba(0, 0, 0, 0.4);
+      animation: lockFadeUp 0.5s ease-out;
+    }
+
+    /* thin accent bar on top, like .quiz-card::before */
+    .lock-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: var(--accent-teal);
+      border-radius: var(--radius) var(--radius) 0 0;
+    }
+
+    .lock-tag {
+      display: inline-block;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: var(--accent-teal);
+      background: var(--accent-teal-dim);
+      padding: 6px 16px;
+      border-radius: 100px;
+      margin-bottom: 24px;
+    }
+
+    .lock-title {
+      font-family: 'DM Serif Display', serif;
+      font-size: 28px;
+      font-weight: 400;
+      letter-spacing: -0.5px;
+      line-height: 1.2;
+      color: var(--text-primary);
+      margin-bottom: 10px;
+    }
+
+    .lock-sub {
+      font-size: 13px;
+      font-weight: 300;
+      color: var(--text-secondary);
+      line-height: 1.7;
+      margin-bottom: 28px;
+    }
+
+    .lock-input-wrap {
+      position: relative;
+      margin-bottom: 14px;
+    }
+
+    .lock-input {
+      width: 100%;
+      padding: 14px 18px;
+      background: var(--bg-primary);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      color: var(--text-primary);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 15px;
+      letter-spacing: 4px;
+      text-align: center;
+      outline: none;
+      transition: all 0.2s;
+    }
+
+    .lock-input::placeholder {
+      color: var(--text-dim);
+      letter-spacing: 2px;
+    }
+
+    .lock-input:focus {
+      border-color: rgba(45, 212, 191, 0.4);
+      box-shadow: 0 0 0 4px rgba(45, 212, 191, 0.1);
+    }
+
+    .lock-input.shake {
+      animation: shake 0.4s ease;
+      border-color: var(--accent-rose);
+    }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-8px); }
+      75% { transform: translateX(8px); }
+    }
+
+    @keyframes lockFadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .lock-btn {
+      width: 100%;
+      padding: 13px;
+      background: var(--accent-teal);
+      color: var(--bg-primary);
+      border: none;
+      border-radius: 12px;
+      font-family: 'Noto Sans KR', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .lock-btn:hover {
+      background: #5eead4;
+      transform: translateY(-1px);
+      box-shadow: 0 8px 24px rgba(45, 212, 191, 0.25);
+    }
+
+    .lock-err {
+      margin-top: 14px;
+      font-size: 12px;
+      color: var(--accent-rose);
+      min-height: 16px;
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+
+    .lock-err.visible { opacity: 1; }
+
+    .lock-footer {
+      margin-top: 28px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 1.5px;
+      color: var(--text-dim);
+    }
+
+    /* Hide main content until unlocked */
+    body.locked { overflow: hidden; }
+    body.locked .container { display: none; }
+
     /* === HEADER === */
     header {
       padding: 80px 0 20px;
       text-align: center;
     }
-
     .tag {
       display: inline-block;
       font-family: 'JetBrains Mono', monospace;
@@ -83,7 +265,6 @@
       margin-bottom: 28px;
       animation: fadeDown 0.6s ease-out;
     }
-
     h1 {
       font-family: 'DM Serif Display', serif;
       font-size: clamp(2.4rem, 5vw, 3.6rem);
@@ -94,7 +275,6 @@
       margin-bottom: 16px;
       animation: fadeDown 0.6s ease-out 0.1s both;
     }
-
     .subtitle {
       font-size: 15px;
       font-weight: 300;
@@ -104,7 +284,6 @@
       line-height: 1.7;
       animation: fadeDown 0.6s ease-out 0.2s both;
     }
-
     /* === STATS BAR === */
     .stats-bar {
       display: flex;
@@ -116,17 +295,14 @@
       border-bottom: 1px solid var(--border);
       animation: fadeDown 0.6s ease-out 0.3s both;
     }
-
     .stat {
       text-align: center;
     }
-
     .stat-value {
       font-family: 'DM Serif Display', serif;
       font-size: 28px;
       color: var(--accent-teal);
     }
-
     .stat-label {
       font-size: 11px;
       letter-spacing: 1.5px;
@@ -134,7 +310,6 @@
       color: var(--text-dim);
       margin-top: 4px;
     }
-
     /* === FILTER / SEARCH === */
     .toolbar {
       display: flex;
@@ -145,13 +320,11 @@
       flex-wrap: wrap;
       animation: fadeDown 0.6s ease-out 0.35s both;
     }
-
     .search-box {
       position: relative;
       flex: 1;
       max-width: 320px;
     }
-
     .search-box input {
       width: 100%;
       padding: 12px 16px 12px 42px;
@@ -164,23 +337,19 @@
       outline: none;
       transition: border-color 0.2s;
     }
-
     .search-box input::placeholder { color: var(--text-dim); }
     .search-box input:focus { border-color: rgba(45, 212, 191, 0.3); }
-
     .search-box svg {
       position: absolute;
       left: 14px; top: 50%;
       transform: translateY(-50%);
       color: var(--text-dim);
     }
-
     .filter-btns {
       display: flex;
       gap: 8px;
       flex-wrap: wrap;
     }
-
     .filter-btn {
       padding: 8px 18px;
       font-family: 'Noto Sans KR', sans-serif;
@@ -193,14 +362,12 @@
       cursor: pointer;
       transition: all 0.2s;
     }
-
     .filter-btn:hover,
     .filter-btn.active {
       color: var(--accent-teal);
       border-color: rgba(45, 212, 191, 0.3);
       background: var(--accent-teal-dim);
     }
-
     /* === QUIZ GRID === */
     .quiz-grid {
       display: grid;
@@ -208,7 +375,6 @@
       gap: 20px;
       padding-bottom: 100px;
     }
-
     .quiz-card {
       position: relative;
       background: var(--bg-card);
@@ -221,7 +387,6 @@
       overflow: hidden;
       animation: fadeUp 0.5s ease-out both;
     }
-
     .quiz-card::before {
       content: '';
       position: absolute;
@@ -231,23 +396,19 @@
       opacity: 0;
       transition: opacity 0.3s;
     }
-
     .quiz-card:hover {
       background: var(--bg-card-hover);
       border-color: rgba(148, 163, 184, 0.15);
       transform: translateY(-4px);
       box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
     }
-
     .quiz-card:hover::before { opacity: 1; }
-
     .card-header {
       display: flex;
       align-items: flex-start;
       justify-content: space-between;
       margin-bottom: 16px;
     }
-
     .card-icon {
       width: 44px; height: 44px;
       border-radius: 12px;
@@ -258,7 +419,6 @@
       background: var(--card-accent-dim, var(--accent-teal-dim));
       flex-shrink: 0;
     }
-
     .card-badge {
       font-family: 'JetBrains Mono', monospace;
       font-size: 10px;
@@ -270,14 +430,12 @@
       padding: 4px 10px;
       border-radius: 6px;
     }
-
     .card-title {
       font-size: 18px;
       font-weight: 600;
       margin-bottom: 8px;
       line-height: 1.4;
     }
-
     .card-desc {
       font-size: 13px;
       font-weight: 300;
@@ -285,7 +443,6 @@
       line-height: 1.6;
       margin-bottom: 20px;
     }
-
     .card-meta {
       display: flex;
       align-items: center;
@@ -293,13 +450,11 @@
       font-size: 12px;
       color: var(--text-dim);
     }
-
     .card-meta span {
       display: flex;
       align-items: center;
       gap: 5px;
     }
-
     .arrow-icon {
       position: absolute;
       bottom: 28px; right: 28px;
@@ -313,16 +468,13 @@
       transform: translateX(-8px);
       transition: all 0.3s;
     }
-
     .quiz-card:hover .arrow-icon {
       opacity: 1;
       transform: translateX(0);
     }
-
     .arrow-icon svg {
       color: var(--card-accent, var(--accent-teal));
     }
-
     /* === EMPTY STATE === */
     .empty-state {
       grid-column: 1 / -1;
@@ -331,9 +483,7 @@
       color: var(--text-dim);
       display: none;
     }
-
     .empty-state.visible { display: block; }
-
     /* === FOOTER === */
     footer {
       text-align: center;
@@ -342,18 +492,15 @@
       color: var(--text-dim);
       border-top: 1px solid var(--border);
     }
-
     /* === ANIMATIONS === */
     @keyframes fadeDown {
       from { opacity: 0; transform: translateY(-16px); }
       to { opacity: 1; transform: translateY(0); }
     }
-
     @keyframes fadeUp {
       from { opacity: 0; transform: translateY(20px); }
       to { opacity: 1; transform: translateY(0); }
     }
-
     /* stagger cards */
     .quiz-card:nth-child(1) { animation-delay: 0.4s; }
     .quiz-card:nth-child(2) { animation-delay: 0.48s; }
@@ -363,7 +510,6 @@
     .quiz-card:nth-child(6) { animation-delay: 0.80s; }
     .quiz-card:nth-child(7) { animation-delay: 0.88s; }
     .quiz-card:nth-child(8) { animation-delay: 0.96s; }
-
     /* === RESPONSIVE === */
     @media (max-width: 640px) {
       header { padding: 48px 0 12px; }
@@ -372,10 +518,41 @@
       .toolbar { flex-direction: column; align-items: stretch; }
       .search-box { max-width: 100%; }
       .filter-btns { justify-content: center; }
+      .lock-card { padding: 36px 26px; }
+      .lock-title { font-size: 24px; }
     }
   </style>
 </head>
-<body>
+<body class="locked">
+
+  <!-- ============================================= -->
+  <!-- ============ PASSWORD LOCK SCREEN =========== -->
+  <!-- ============================================= -->
+  <div class="lock-screen" id="lockScreen">
+    <div class="lock-card">
+      <div class="lock-tag">🔐 Access Required</div>
+      <div class="lock-title">2026 Medical<br>Quiz Archive</div>
+      <p class="lock-sub">이 아카이브는 비공개입니다.<br>접근하려면 비밀번호를 입력하세요.</p>
+
+      <div class="lock-input-wrap">
+        <input
+          type="password"
+          class="lock-input"
+          id="lockInput"
+          placeholder="• • • • •"
+          autocomplete="off"
+          spellcheck="false"
+          maxlength="32"
+        >
+      </div>
+
+      <button class="lock-btn" id="lockBtn">ENTER</button>
+
+      <div class="lock-err" id="lockErr">비밀번호가 올바르지 않습니다.</div>
+
+      <div class="lock-footer">PRIVATE · 2026</div>
+    </div>
+  </div>
 
   <div class="container">
     <!-- ===== HEADER ===== -->
@@ -384,7 +561,6 @@
       <h1>2026 Medical Quiz Archive</h1>
       <p class="subtitle">과목별 의학 퀴즈 아카이브입니다.<br>카드를 클릭하면 퀴즈 페이지로 이동합니다.</p>
     </header>
-
     <!-- ===== STATS (자동 계산됨) ===== -->
     <div class="stats-bar">
       <div class="stat">
@@ -400,7 +576,6 @@
         <div class="stat-label">Questions</div>
       </div>
     </div>
-
     <!-- ===== TOOLBAR ===== -->
     <div class="toolbar">
       <div class="search-box">
@@ -412,10 +587,8 @@
         <!-- 카테고리 버튼은 자동 생성됩니다 -->
       </div>
     </div>
-
     <!-- ===== QUIZ CARDS ===== -->
     <div class="quiz-grid" id="quizGrid">
-
       <!--
       ╔══════════════════════════════════════════════════════════════╗
       ║  🔽 새 퀴즈를 추가하려면 아래 템플릿을 복사해서 붙여넣으세요  🔽  ║
@@ -444,9 +617,7 @@
       ║                                                              ║
       ╚══════════════════════════════════════════════════════════════╝
       -->
-
       <!-- ===== 예시 카드 (원하는 대로 수정/삭제하세요) ===== -->
-
       <a class="quiz-card" href="psychiatry-01.html"
          data-subject="정신"
          data-questions="606"
@@ -465,7 +636,6 @@
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
         </div>
       </a>
-
       <a class="quiz-card" href="psychiatry-02.html"
          data-subject="정신"
          data-questions="345"
@@ -484,7 +654,6 @@
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
         </div>
       </a>
-
       <a class="quiz-card" href="cardiovascular-01.html"
          data-subject="심혈관계"
          data-questions="553"
@@ -503,43 +672,90 @@
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
         </div>
       </a>
-
       
       <!-- ===== 여기에 새 퀴즈 카드를 추가하세요 ===== -->
-
       <div class="empty-state" id="emptyState">
         검색 결과가 없습니다.
       </div>
     </div>
-
     <footer>
       2026 Medical Quiz Archive · Built for GitHub Pages
     </footer>
   </div>
-
   <script>
+    /* ============================================= */
+    /* ============ PASSWORD LOCK LOGIC ============ */
+    /* ============================================= */
+    (function() {
+      const PASSWORD = 'WorWor';
+      const STORAGE_KEY = 'medical_archive_unlocked_v1';
+
+      const body = document.body;
+      const lock = document.getElementById('lockScreen');
+      const input = document.getElementById('lockInput');
+      const btn = document.getElementById('lockBtn');
+      const err = document.getElementById('lockErr');
+
+      // 이미 이번 세션에 잠금을 푼 상태인지 확인
+      let unlocked = false;
+      try {
+        unlocked = sessionStorage.getItem(STORAGE_KEY) === '1';
+      } catch (e) { /* sessionStorage 차단 환경 대비 */ }
+
+      if (unlocked) {
+        openSite();
+      } else {
+        setTimeout(() => input && input.focus(), 300);
+      }
+
+      function openSite() {
+        body.classList.remove('locked');
+        lock.classList.add('hidden');
+        setTimeout(() => { lock.style.display = 'none'; }, 550);
+      }
+
+      function tryUnlock() {
+        const val = input.value.trim();
+        if (val === PASSWORD) {
+          try { sessionStorage.setItem(STORAGE_KEY, '1'); } catch (e) {}
+          err.classList.remove('visible');
+          openSite();
+        } else {
+          err.classList.add('visible');
+          input.classList.remove('shake');
+          void input.offsetWidth; // 애니메이션 재생용 reflow
+          input.classList.add('shake');
+          input.select();
+        }
+      }
+
+      btn.addEventListener('click', tryUnlock);
+      input.addEventListener('keydown', e => {
+        if (e.key === 'Enter') tryUnlock();
+      });
+      input.addEventListener('input', () => {
+        if (err.classList.contains('visible')) err.classList.remove('visible');
+      });
+    })();
+
     // ===== 자동 통계 계산 =====
     function updateStats() {
       const cards = document.querySelectorAll('.quiz-card');
       const subjects = new Set();
       let totalQ = 0;
-
       cards.forEach(card => {
         subjects.add(card.dataset.subject);
         totalQ += parseInt(card.dataset.questions) || 0;
       });
-
       document.getElementById('totalQuizzes').textContent = cards.length;
       document.getElementById('totalSubjects').textContent = subjects.size;
       document.getElementById('totalQuestions').textContent = totalQ;
     }
-
     // ===== 자동 필터 버튼 생성 =====
     function buildFilters() {
       const cards = document.querySelectorAll('.quiz-card');
       const subjects = new Set();
       cards.forEach(card => subjects.add(card.dataset.subject));
-
       const container = document.getElementById('filterBtns');
       subjects.forEach(subject => {
         const btn = document.createElement('button');
@@ -549,49 +765,38 @@
         container.appendChild(btn);
       });
     }
-
     // ===== 필터 기능 =====
     document.getElementById('filterBtns').addEventListener('click', e => {
       if (!e.target.classList.contains('filter-btn')) return;
-
       document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
       e.target.classList.add('active');
-
       const filter = e.target.dataset.filter;
       let visibleCount = 0;
-
       document.querySelectorAll('.quiz-card').forEach(card => {
         const match = filter === 'all' || card.dataset.subject === filter;
         card.style.display = match ? '' : 'none';
         if (match) visibleCount++;
       });
-
       document.getElementById('emptyState').classList.toggle('visible', visibleCount === 0);
     });
-
     // ===== 검색 기능 =====
     document.getElementById('searchInput').addEventListener('input', e => {
       const query = e.target.value.toLowerCase();
       let visibleCount = 0;
-
       // 검색 시 필터 초기화
       document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
       document.querySelector('[data-filter="all"]').classList.add('active');
-
       document.querySelectorAll('.quiz-card').forEach(card => {
         const text = card.textContent.toLowerCase();
         const match = text.includes(query);
         card.style.display = match ? '' : 'none';
         if (match) visibleCount++;
       });
-
       document.getElementById('emptyState').classList.toggle('visible', visibleCount === 0);
     });
-
     // 초기화
     buildFilters();
     updateStats();
   </script>
-
 </body>
 </html>
